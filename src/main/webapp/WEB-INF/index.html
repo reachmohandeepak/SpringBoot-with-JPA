@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+<body ng-app="myApp">
+	Welcome
+	<div ng-controller="myCtrl">
+		<p>Click the button to run a function:</p>
+		<button ng-click="myFunc()">Insert</button>
+		</br>
+		<button ng-click="myFunc1()">Update</button>
+		</br>
+		<button ng-click="myFunc2()">Get Record</button>
+		<p>{{uploadResult}}</p>
+	</div>
+
+	<script>
+		angular
+				.module('myApp', [])
+				.controller(
+						'myCtrl',
+						[
+								'$scope',
+								'$http',
+								function($scope, $http) {
+									$scope.Note = {};
+									$scope.Note.Title = "Being Indian";
+									$scope.Note.Content = "Truth about India";
+									$scope.myFunc = function() {
+										var url = "/savePerson";
+										var Person = {
+											"name" : "Mohaan Krishna",
+											"content" : "Bangalore",
+											"country" : [ {
+												"name" : "India"
+											}, {
+												"name" : "Pakistan"
+											}, {
+												"name" : "Bangladesh"
+											}, {
+												"name" : "Srilanka"
+											} ]
+										};
+										var data = new FormData();
+										data.append('Person', Person);
+
+										$http
+												.post(url,
+														angular.toJson(Person))
+												.then(
+														function(response) {
+															$scope.uploadResult = response.data;
+														},
+														function(response) {
+															$scope.uploadResult = response.data;
+														});
+									};
+									$scope.myFunc1 = function() {
+										var url = "/updatePerson";
+										var Person = {
+											"personId" : 1,
+											"content" : "Karnataka",
+											"createdAt" : 1508669767000,
+											"updatedAt" : 1508669767000,
+											"country" : [ {
+												"id" : 1,
+												"createdAt" : 1508669767000,
+												"updatedAt" : 1508669767000,
+												"personId" : 1,
+												"name" : "USA"
+											}, {
+												"id" : 2,
+												"createdAt" : 1508669767000,
+												"updatedAt" : 1508669767000,
+												"personId" : 1,
+												"name" : "UAE"
+											}, {
+												"id" : 3,
+												"createdAt" : 1508669767000,
+												"updatedAt" : 1508669767000,
+												"personId" : 1,
+												"name" : "USSR"
+											}, {
+												"id" : 4,
+												"createdAt" : 1508669767000,
+												"updatedAt" : 1508669767000,
+												"personId" : 1,
+												"name" : "UNO"
+											} ],
+											"name" : "Krishna"
+										};
+										var data = new FormData();
+										data.append('Person', Person);
+
+										$http
+												.post(url,
+														angular.toJson(Person))
+												.then(
+														function(response) {
+															$scope.uploadResult = response.data;
+														},
+														function(response) {
+															$scope.uploadResult = response.data;
+														});
+									};
+									$scope.myFunc2 = function() {
+										
+										var PersonId = 1;
+										var url = "/getPerson/"+PersonId;
+										$http
+												.get(url)
+												.then(
+														function(response) {
+															$scope.uploadResult = response.data;
+														},
+														function(response) {
+															$scope.uploadResult = response.data;
+														});
+									};
+								} ]);
+	</script>
+</body>
+</html>
