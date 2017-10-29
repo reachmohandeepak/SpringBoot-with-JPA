@@ -5,7 +5,17 @@
 <body ng-app="myApp">
 	Welcome
 	<div ng-controller="myCtrl">
-		<p>Click the button to run a function:</p>
+		<p>Enter Student Details</p>
+<p>Name: <input type="text" ng-model="StudentDetails.studendName"></p>
+<p>Address: <input type="text" ng-model="StudentDetails.address"></p>
+<p>Phone: <input type="text" ng-model="StudentDetails.phone"></p>
+<p>Department : <input type="text" ng-model="StudentDetails.departmentDetails.deptName"></p>
+<p>Hostel Name: <input type="text" ng-model="StudentDetails.hostelId.hostelName"></p>
+<p>Course : <select name="multipleSelect" id="multipleSelect" ng-model="StudentDetails.courseId" multiple>
+      <option value="Java">Java</option>
+      <option value="C#">C#</option>
+      <option value="C++">C++</option>
+    </select></p>
 		<button ng-click="addStudentDetails()">New Student</button>
 		<p>{{uploadResult}}</p>
 	</div>
@@ -19,12 +29,9 @@
 								'$scope',
 								'$http',
 								function($scope, $http) {
-									$scope.Note = {};
-									$scope.Note.Title = "Being Indian";
-									$scope.Note.Content = "Truth about India";
 									$scope.addStudentDetails = function() {
 										var url = "/saveNewStudentDetails";
-										var StudentDetails = {
+										/* $scope.StudentDetails = {
 											"studendName" : "Theju",
 											"address" : "Bangalore",
 											"phone": 9886642962,
@@ -42,14 +49,23 @@
 												"courseName" : "C++"
 											}, {
 												"courseName" : "C"
-											} ]
-										};
+											} ] 
+										};*/
+										$scope.StudentDetails;
+										var courseId = [];
+										angular.forEach($scope.StudentDetails.courseId, function(value, key) {
+											  //alert(key + ': ' + value);
+											courseId.push({
+										        "courseName": value
+										    });
+											});
+										$scope.StudentDetails.courseId = courseId;
 										var data = new FormData();
-										data.append('StudentDetails', StudentDetails);
+										data.append('StudentDetails', $scope.StudentDetails);
 
 										$http
 												.post(url,
-														angular.toJson(StudentDetails))
+														angular.toJson($scope.StudentDetails))
 												.then(
 														function(response) {
 															$scope.uploadResult = response.data;
