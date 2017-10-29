@@ -6,11 +6,7 @@
 	Welcome
 	<div ng-controller="myCtrl">
 		<p>Click the button to run a function:</p>
-		<button ng-click="myFunc()">Insert</button>
-		</br>
-		<button ng-click="myFunc1()">Update</button>
-		</br>
-		<button ng-click="myFunc2()">Get Record</button>
+		<button ng-click="addStudentDetails()">New Student</button>
 		<p>{{uploadResult}}</p>
 	</div>
 
@@ -26,27 +22,34 @@
 									$scope.Note = {};
 									$scope.Note.Title = "Being Indian";
 									$scope.Note.Content = "Truth about India";
-									$scope.myFunc = function() {
-										var url = "/savePerson";
-										var Person = {
-											"name" : "Mohaan Krishna",
-											"content" : "Bangalore",
-											"country" : [ {
-												"name" : "India"
+									$scope.addStudentDetails = function() {
+										var url = "/saveNewStudentDetails";
+										var StudentDetails = {
+											"studendName" : "Theju",
+											"address" : "Bangalore",
+											"phone": 9886642962,
+											"hostelId" : {
+												"hostelName":"Svce Hostel"
+											},
+											"departmentDetails" : {
+												"deptName" : "Information Science"
+											},
+											"courseId" : [ {
+												"courseName" : "Java"
 											}, {
-												"name" : "Pakistan"
+												"courseName" : "C#"
 											}, {
-												"name" : "Bangladesh"
+												"courseName" : "C++"
 											}, {
-												"name" : "Srilanka"
+												"courseName" : "C"
 											} ]
 										};
 										var data = new FormData();
-										data.append('Person', Person);
+										data.append('StudentDetails', StudentDetails);
 
 										$http
 												.post(url,
-														angular.toJson(Person))
+														angular.toJson(StudentDetails))
 												.then(
 														function(response) {
 															$scope.uploadResult = response.data;
@@ -55,68 +58,7 @@
 															$scope.uploadResult = response.data;
 														});
 									};
-									$scope.myFunc1 = function() {
-										var url = "/updatePerson";
-										var Person = {
-											"personId" : 1,
-											"content" : "Karnataka",
-											"createdAt" : 1508669767000,
-											"updatedAt" : 1508669767000,
-											"country" : [ {
-												"id" : 1,
-												"createdAt" : 1508669767000,
-												"updatedAt" : 1508669767000,
-												"personId" : 1,
-												"name" : "USA"
-											}, {
-												"id" : 2,
-												"createdAt" : 1508669767000,
-												"updatedAt" : 1508669767000,
-												"personId" : 1,
-												"name" : "UAE"
-											}, {
-												"id" : 3,
-												"createdAt" : 1508669767000,
-												"updatedAt" : 1508669767000,
-												"personId" : 1,
-												"name" : "USSR"
-											}, {
-												"id" : 4,
-												"createdAt" : 1508669767000,
-												"updatedAt" : 1508669767000,
-												"personId" : 1,
-												"name" : "UNO"
-											} ],
-											"name" : "Krishna"
-										};
-										var data = new FormData();
-										data.append('Person', Person);
-
-										$http
-												.post(url,
-														angular.toJson(Person))
-												.then(
-														function(response) {
-															$scope.uploadResult = response.data;
-														},
-														function(response) {
-															$scope.uploadResult = response.data;
-														});
-									};
-									$scope.myFunc2 = function() {
-										
-										var PersonId = 1;
-										var url = "/getPerson/"+PersonId;
-										$http
-												.get(url)
-												.then(
-														function(response) {
-															$scope.uploadResult = response.data;
-														},
-														function(response) {
-															$scope.uploadResult = response.data;
-														});
-									};
+									
 								} ]);
 	</script>
 </body>
