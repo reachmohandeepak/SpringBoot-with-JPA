@@ -2,80 +2,192 @@
 <html>
 <script
 	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <body ng-app="myApp">
-	Welcome
+	Welcome SVCE College DataBase
 	<div ng-controller="myCtrl">
+	<input type="checkbox" ng-model="addStudent" value="false"> Add New Student
+	<div ng-show="addStudent">
 		<p>Enter Student Details</p>
-<p>Name: <input type="text" ng-model="StudentDetails.studendName"></p>
-<p>Address: <input type="text" ng-model="StudentDetails.address"></p>
-<p>Phone: <input type="text" ng-model="StudentDetails.phone"></p>
-<p>Department : <input type="text" ng-model="StudentDetails.departmentDetails.deptName"></p>
-<p>Hostel Name: <input type="text" ng-model="StudentDetails.hostelId.hostelName"></p>
-<p>Course : <select name="multipleSelect" id="multipleSelect" ng-model="StudentDetails.courseId" multiple>
-      <option value="Java">Java</option>
-      <option value="C#">C#</option>
-      <option value="C++">C++</option>
-    </select></p>
-		<button ng-click="addStudentDetails()">New Student</button>
-		<p>{{uploadResult}}</p>
+		<p>
+		 <input type="hidden" ng-model="StudentDetails.studendId">
+			Name: <input type="text" ng-model="StudentDetails.studendName">
+		</p>
+		<p>
+			Address: <input type="text" ng-model="StudentDetails.address">
+		</p>
+		<p>
+			Phone: <input type="text" ng-model="StudentDetails.phone">
+		</p>
+		<p>
+			Department : <input type="text"
+				ng-model="StudentDetails.departmentDetails.deptName">
+		</p>
+		<p>
+			Hostel Name: <input type="text"
+				ng-model="StudentDetails.hostelId.hostelName">
+		</p>
+		<p>
+			Course : <select name="multipleSelect" id="multipleSelect"
+				ng-model="StudentDetails.courseId" multiple>
+				<option value="Java">Java</option>
+				<option value="C#">C#</option>
+				<option value="C++">C++</option>
+			</select>
+		</p>
+		<button ng-click="addStudentDetails()">Add Student Details</button>
+		<br>
+		</div>
+		 <!-- <p>{{uploadResult}}</p>  -->
+		
+		<table border=1>
+	<tr >
+			<td>Sl No</td>
+			<td>Student Name</td>
+			<td>Address</td>
+			<td>Phone</td>
+			<td>Department Name</td>
+			<td>Hostel Name</td>
+			<td>Course Details</td>
+			<td>Edit</td>
+		</tr>
+		<tr ng-repeat="x in studentData">
+			<td><label><input type="radio" ng-model="button.value" name="rdoResult" value="{{x.studentId}}"></label></td>
+			<td>{{ x.studendName }}</td>
+			<td>{{ x.address }}</td>
+			<td>{{ x.phone }}</td>
+			<td>{{ x.departmentDetails.deptName }}</td>
+			<td>{{ x.hostelId.hostelName }} - {{ x.hostelId.roomNo }}</td>
+			<td>{{ x.courseId[0].courseName }} <br>{{ x.courseId[1].courseName }} <br>{{ x.courseId[2].courseName }}</td>
+			<td><button ng-click="editStudentDetails(x.studentId)">Edit Student Data</button></td>
+		</tr>
+	</table>
+	
 	</div>
+	 
+	 
+	</div>
+
+	
 
 	<script>
 		angular
 				.module('myApp', [])
 				.controller(
 						'myCtrl',
-						[
-								'$scope',
-								'$http',
+						['$scope','$http',
+								
 								function($scope, $http) {
+							
+									
 									$scope.addStudentDetails = function() {
 										var url = "/saveNewStudentDetails";
-										/* $scope.StudentDetails = {
-											"studendName" : "Theju",
-											"address" : "Bangalore",
-											"phone": 9886642962,
-											"hostelId" : {
-												"hostelName":"Svce Hostel"
-											},
-											"departmentDetails" : {
-												"deptName" : "Information Science"
-											},
-											"courseId" : [ {
-												"courseName" : "Java"
-											}, {
-												"courseName" : "C#"
-											}, {
-												"courseName" : "C++"
-											}, {
-												"courseName" : "C"
-											} ] 
-										};*/
+									
 										$scope.StudentDetails;
 										var courseId = [];
-										angular.forEach($scope.StudentDetails.courseId, function(value, key) {
-											  //alert(key + ': ' + value);
-											courseId.push({
-										        "courseName": value
-										    });
-											});
+										angular.forEach(
+												$scope.StudentDetails.courseId,
+												function(value, key) {
+													//alert(key + ': ' + value);
+													courseId.push({
+														"courseName" : value
+													});
+												});
 										$scope.StudentDetails.courseId = courseId;
 										var data = new FormData();
-										data.append('StudentDetails', $scope.StudentDetails);
+										data.append('StudentDetails',
+												$scope.StudentDetails);
 
 										$http
-												.post(url,
-														angular.toJson($scope.StudentDetails))
+												.post(
+														url,
+														angular
+																.toJson($scope.StudentDetails))
 												.then(
 														function(response) {
 															$scope.uploadResult = response.data;
+															$scope.getAllStudentDetails();
 														},
 														function(response) {
 															$scope.uploadResult = response.data;
 														});
 									};
+									$scope.getAllStudentDetails = function() {
+										var url = "/getAllStudentDetails";
+										$http
+												.get(
+														url)
+												.then(
+														function(response) {
+															$scope.studentData = response.data;
+															$scope.uploadResult = response.data;
+															//alert($scope.studentData[0].studendName);
+														},
+														function(response) {
+															$scope.studentData = response.data;
+														});
+									};
 									
+									$scope.getAllStudentDetails();
+									
+									$scope.editStudentDetails = function(index){
+										$scope.addStudent = "true";
+										$scope.StudentDetails;
+										var studentId = $scope.uploadResult[index-1].studentId;
+										var name = $scope.uploadResult[index-1].studendName;
+										var address = $scope.uploadResult[index-1].address;
+										var phone = $scope.uploadResult[index-1].phone;
+										var deptName = $scope.uploadResult[index-1].departmentDetails.deptName;
+										var hostelName = $scope.uploadResult[index-1].hostelId.hostelName;
+										$scope.StudentDetails = {
+												studendName : name,
+												address : address,
+												phone : phone,
+												studentId :studentId
+										}
+										$scope.StudentDetails.departmentDetails = {
+												deptName : deptName
+										}
+										$scope.StudentDetails.hostelId = {
+												hostelName : hostelName
+										}
+									}
 								} ]);
 	</script>
+	<style>
+input[type=text], select {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+input[type=submit] {
+    width: 100%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+input[type=submit]:hover {
+    background-color: #45a049;
+}
+
+div {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 20px;
+}
+</style>
 </body>
 </html>

@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,7 +26,7 @@ public class StudentDataBaseController {
     public StudentDetails createNote(@Valid @RequestBody StudentDetails studentDetails) {
 		
 		StudentDetails sd = new StudentDetails();
-		
+		sd.setStudentId(studentDetails.getStudentId());
 		sd.setAddress(studentDetails.getAddress());
 		sd.setPhone(studentDetails.getPhone());
 		sd.setStudendName(studentDetails.getStudendName());
@@ -56,4 +57,8 @@ public class StudentDataBaseController {
 		
         return studentRepo.save(sd);
     }
+	@GetMapping("/getAllStudentDetails")
+    public List<StudentDetails> getAllStudentDetails() {
+		return studentRepo.findAll();
+	}
 }
