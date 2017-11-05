@@ -7,7 +7,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class CollegeDataBaseController {
 
 	@GetMapping(value = "/")
-	public String getAllStudentDeatails() {
+	public String index() {
 		return "index";
+	}
+	@GetMapping(value = "/allStudentDeatails")
+	public String allStudentDeatails() {
+		return "student"; 
 	}
 }
